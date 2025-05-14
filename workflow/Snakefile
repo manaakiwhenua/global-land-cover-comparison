@@ -1,0 +1,108 @@
+import os
+import glob
+import re
+from pathlib import Path
+import xml.etree.ElementTree as ET
+
+configfile: "config.yaml"
+
+# Configuration
+output_base = config["output_dir"]
+region_file = config["region"]["file"]
+region_attr = config["region"]["attribute"]
+regions = config["region"]["values"]
+image_sources = config["image_sources"]
+
+# Get available sources
+sources = list(image_sources.keys())
+
+# Collect all files per image source that match pattern
+def find_matching_files(source_name):
+    src = image_sources[source_name]
+    files = []
+    pattern = src["pattern"]
+    for directory in src["directories"]:
+        all_files = glob.glob(os.path.join(directory, "**", "*.tif*"), recursive=True)
+        pat = re.compile(pattern)
+        matches = [f for f in all_files if pat.search(os.path.basename(f))]
+        files.extend(matches)
+    return sorted(set(files))
+
+# Rule: default
+rule all:
+    input:
+        expand(os.path.join(output_base, "clipped", "{source}", "{region}.tif"),
+               source=sources, region=regions)
+
+rule build_vrt:
+    conda: "envs/gdal.yaml"
+    output:
+        vrt=os.path.join(output_base, "vrt", "{source}.vrt")
+    run:
+        source = wildcards.source
+        files = find_matching_files(source)
+        band = image_sources[source]["band"]
+        if not files:
+            raise ValueError(f"No matching files found for source: {source}")
+        
+        os.makedirs(os.path.dirname(output.vrt), exist_ok=True)
+        list_file = output.vrt + ".inputs.txt"
+        
+        # Write out the list of source files to the list file
+        with open(list_file, "w") as f:
+            f.write("\n".join(files))
+        
+        # Build the VRT without -separate, mosaicing all files into one band
+        shell(f"gdalbuildvrt -b {band} -input_file_list {list_file} {output.vrt}")
+
+# # Rule: build VRT per image source
+# rule build_vrt:
+#     conda: "envs/gdal.yaml"
+#     output:
+#         vrt=os.path.join(output_base, "vrt", "{source}.vrt")
+#     run:
+#         source = wildcards.source
+#         files = find_matching_files(source)
+#         band = image_sources[source]["band"]
+#         if not files:
+#             raise ValueError(f"No matching files found for source: {source}")
+#         os.makedirs(os.path.dirname(output.vrt), exist_ok=True)
+#         list_file = output.vrt + ".inputs.txt"
+#         with open(list_file, "w") as f:
+#             f.write("\n".join(files))
+#         shell(f"gdalbuildvrt -b {band} -separate -input_file_list {list_file} {output.vrt}")
+
+# Rule: build region VRTs
+rule make_region_vrt:
+    conda: "envs/gdal.yaml"
+    output:
+        vrt=os.path.join(output_base, "regions", "{region}.vrt")
+    params:
+        attr=region_attr,
+        gpkg=region_file,
+        query=lambda wc: 'SELECT * FROM regions WHERE "' + region_attr + f" = '{wc.region}'"
+    shell:
+        r"""
+        mkdir -p $(dirname {output.vrt})
+        echo -e '<OGRVRTDataSource>
+          <OGRVRTLayer name="{wildcards.region}">
+            <SrcDataSource>{params.gpkg}</SrcDataSource>
+            <SrcLayer>regions</SrcLayer>
+            <SrcSQL>{params.query}</SrcSQL>
+          </OGRVRTLayer>
+        </OGRVRTDataSource>' > "{output.vrt}"
+        """
+
+# Rule: clip VRT to region
+rule clip_to_region:
+    conda: "envs/gdal.yaml"
+    input:
+        vrt=os.path.join(output_base, "vrt", "{source}.vrt"),
+        region=os.path.join(output_base, "regions", "{region}.vrt")
+    output:
+        tif=os.path.join(output_base, "clipped", "{source}", "{region}.tif")
+    shell:
+        r"""
+        mkdir -p $(dirname {output.tif})
+        gdalwarp -of GTiff -cutline {input.region} -crop_to_cutline {input.vrt} {output.tif}
+        """

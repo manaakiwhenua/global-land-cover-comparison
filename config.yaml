@@ -1,0 +1,27 @@
+output_dir: /media/lawr/blue-transcend/land-cover-comparisons/output
+
+region:
+  file: /media/lawr/blue-transcend/land-cover-comparisons/statsnz-regional-council-2025-GPKG/regional-council-2025.gpkg
+  attribute: REGC2025_V1_00_NAME
+  values:
+    - Auckland
+    - Manawatū-Whanganui Region
+    - Canterbury Region
+
+image_sources:
+  # DyanamicWorld:
+  #   directories:
+  #     - /media/lawr/blue-transcend/land-cover-comparisons/DynamicWorld
+  #   pattern: "^.*tiff?$"
+  #   band: 1
+  # GLC-FCS30D:
+  #   directories:
+  #     - '/media/lawr/blue-transcend/land-cover-comparisons/GLC_FCS30D_19852022maps_E160-E165'
+  #     - '/media/lawr/blue-transcend/land-cover-comparisons/GLC_FCS30D_19852022maps_E170-E175'
+  #   pattern: ^GLC_FCS30D_20002022_E(165|170|175)S(30|35|40|45)_Annual\.tif$
+  #   band: 23 # Temporal sequence, 1-23 = 2000-2022
+  WorldCover:
+    directories:
+      - /media/lawr/blue-transcend/land-cover-comparisons/WorldCover/ESA_WorldCover_10m_2021_v200_60deg_macrotile_S90E120/
+    pattern: ^ESA_WorldCover_10m_2021_V200_S(36|39|42|45|48|51|54)E(165|168|171|174|177)_Map\.tif$
+    band: 1

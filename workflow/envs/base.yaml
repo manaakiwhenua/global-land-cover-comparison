@@ -1,0 +1,9 @@
+name: snakemake9
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - snakemake=9.*
+  - mamba  # faster dependency resolution
+  - python=3.11
+  - pip

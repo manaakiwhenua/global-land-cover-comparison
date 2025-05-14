@@ -1,0 +1,6 @@
+name: gdal
+channels:
+  - conda-forge
+dependencies:
+  - gdal
+  - python
