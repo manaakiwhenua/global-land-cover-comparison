@@ -2,7 +2,6 @@ import os
 import glob
 import re
 from pathlib import Path
-import xml.etree.ElementTree as ET
 
 configfile: "config.yaml"
 
@@ -10,6 +9,7 @@ configfile: "config.yaml"
 output_base = config["output_dir"]
 region_file = config["region"]["file"]
 region_attr = config["region"]["attribute"]
+region_file_layer = config["region"]["layer"]
 regions = config["region"]["values"]
 image_sources = config["image_sources"]
 
@@ -28,11 +28,21 @@ def find_matching_files(source_name):
         files.extend(matches)
     return sorted(set(files))
 
+def source_pair_confusion():
+    for region in regions:
+        for i in range(len(sources)):
+            for j in range(i + 1, len(sources)):
+                yield os.path.join(output_base, "confusion", region, f"{sources[j]}--{sources[i]}.png")
+
+
 # Rule: default
 rule all:
     input:
-        expand(os.path.join(output_base, "clipped", "{source}", "{region}.tif"),
-               source=sources, region=regions)
+        expand(
+            os.path.join(output_base, "aligned", "{source}", "{region}.tif"),
+            source=sources, region=regions
+        ),
+        list(source_pair_confusion())
 
 rule build_vrt:
     conda: "envs/gdal.yaml"
@@ -55,23 +65,6 @@ rule build_vrt:
         # Build the VRT without -separate, mosaicing all files into one band
         shell(f"gdalbuildvrt -b {band} -input_file_list {list_file} {output.vrt}")
 
-# # Rule: build VRT per image source
-# rule build_vrt:
-#     conda: "envs/gdal.yaml"
-#     output:
-#         vrt=os.path.join(output_base, "vrt", "{source}.vrt")
-#     run:
-#         source = wildcards.source
-#         files = find_matching_files(source)
-#         band = image_sources[source]["band"]
-#         if not files:
-#             raise ValueError(f"No matching files found for source: {source}")
-#         os.makedirs(os.path.dirname(output.vrt), exist_ok=True)
-#         list_file = output.vrt + ".inputs.txt"
-#         with open(list_file, "w") as f:
-#             f.write("\n".join(files))
-#         shell(f"gdalbuildvrt -b {band} -separate -input_file_list {list_file} {output.vrt}")
-
 # Rule: build region VRTs
 rule make_region_vrt:
     conda: "envs/gdal.yaml"
@@ -80,17 +73,25 @@ rule make_region_vrt:
     params:
         attr=region_attr,
         gpkg=region_file,
-        query=lambda wc: 'SELECT * FROM regions WHERE "' + region_attr + f" = '{wc.region}'"
+        layer=region_file_layer,
+        t_srs='EPSG:4326',
+        # query=lambda wc: f'<![CDATA[SELECT * FROM regions WHERE "{region_attr}" = \'{wc.region}\' ]]>'
     shell:
         r"""
-        mkdir -p $(dirname {output.vrt})
-        echo -e '<OGRVRTDataSource>
-          <OGRVRTLayer name="{wildcards.region}">
-            <SrcDataSource>{params.gpkg}</SrcDataSource>
-            <SrcLayer>regions</SrcLayer>
-            <SrcSQL>{params.query}</SrcSQL>
-          </OGRVRTLayer>
-        </OGRVRTDataSource>' > "{output.vrt}"
+        mkdir -p $(dirname "{output.vrt}")
+        cat <<EOF > "{output.vrt}"
+<OGRVRTDataSource>
+    <OGRVRTWarpedLayer>
+    <OGRVRTLayer name="{wildcards.region}">
+        <SrcDataSource>{params.gpkg}</SrcDataSource>
+        <SrcSQL>SELECT * FROM {params.layer} WHERE "{params.attr}" = '{wildcards.region}'</SrcSQL>
+        <GeometryType>wkbPolygon</GeometryType>
+        <FeatureCount>1</FeatureCount>
+    </OGRVRTLayer>
+    <TargetSRS>{params.t_srs}</TargetSRS>
+    </OGRVRTWarpedLayer>
+</OGRVRTDataSource>
+EOF
         """
 
 # Rule: clip VRT to region
@@ -100,9 +101,85 @@ rule clip_to_region:
         vrt=os.path.join(output_base, "vrt", "{source}.vrt"),
         region=os.path.join(output_base, "regions", "{region}.vrt")
     output:
-        tif=os.path.join(output_base, "clipped", "{source}", "{region}.tif")
+        vrt=os.path.join(output_base, "clipped", "{source}", "{region}.vrt")
     shell:
         r"""
-        mkdir -p $(dirname {output.tif})
-        gdalwarp -of GTiff -cutline {input.region} -crop_to_cutline {input.vrt} {output.tif}
+        mkdir -p $(dirname "{output.vrt}")
+        gdalwarp -of VRT -cutline "{input.region}" -crop_to_cutline {input.vrt} "{output.vrt}"
         """
+
+rule materialise_region_cutline:
+    conda: "envs/gdal.yaml"
+    input:
+        vrt=os.path.join(output_base, "regions", "{region}.vrt")
+    output:
+        gpkg=os.path.join(output_base, "regions", "2193", "{region}.gpkg")
+    shell:
+        r"""
+        ogr2ogr -t_srs EPSG:2193 "{output.gpkg}" "{input.vrt}"
+        """
+
+rule rasterize_region:
+    conda: "envs/gdal.yaml"
+    input:
+        region=os.path.join(output_base, "regions", "2193", "{region}.gpkg")
+    output:
+        mask_tif=os.path.join(output_base, "masks", "2193", "{region}.tif")
+    params:
+        pixel_size=10
+    shell:
+        r"""
+        mkdir -p $(dirname "{output.mask_tif}")
+        gdal_rasterize \
+            -burn 1 \
+            -a_nodata 0 \
+            -tr {params.pixel_size} {params.pixel_size} \
+            -tap \
+            -ot Byte \
+            -co COMPRESS=DEFLATE \
+            -co TILED=YES \
+            -a_srs EPSG:2193 \
+            -l "{wildcards.region}" \
+            "{input.region}" \
+            "{output.mask_tif}"
+        """
+
+rule align_to_template:
+    conda: "envs/gdal.yaml"
+    input:
+        source=os.path.join(output_base, "clipped", "{source}", "{region}.vrt"),
+        template=os.path.join(output_base, "masks", "2193", "{region}.tif"),
+        script='workflow/scripts/align_raster.py'
+    output:
+        os.path.join(output_base, "aligned", "{source}", "{region}.tif")
+    script:
+        "scripts/align_raster.py"
+
+rule compute_confusion:
+    conda:'envs/rasterio.yaml'
+    input:
+        src1=os.path.join(output_base, "aligned", "{source1}", "{region}.tif"),
+        src2=os.path.join(output_base, "aligned", "{source2}", "{region}.tif"),
+        script='workflow/scripts/confusion.py'
+    output:
+        csv=os.path.join(output_base, "confusion", "{region}", "{source1}--{source2}.csv")
+    params:
+        window_size = 512
+    script:
+        "scripts/confusion.py"
+
+rule visualise_confusion:
+    conda: 'envs/visualise.yaml'
+    input:
+        csv=os.path.join(output_base, "confusion", "{region}", "{source1}--{source2}.csv"),
+        script='workflow/scripts/confusion-vis.py'
+    output:
+        png=os.path.join(output_base, "confusion", "{region}", "{source1}--{source2}.png"),
+        svg=os.path.join(output_base, "confusion", "{region}", "{source1}--{source2}.svg")
+    params:
+        colourmap1=lambda wc: config['image_sources'][wc.source1]['colourmap'],
+        colourmap2=lambda wc: config['image_sources'][wc.source2]['colourmap'],
+        labels1=lambda wc: config['image_sources'][wc.source1]['labels'],
+        labels2=lambda wc: config['image_sources'][wc.source2]['labels'],
+    script:
+        'scripts/confusion-vis.py'

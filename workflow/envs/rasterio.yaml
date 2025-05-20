@@ -1,0 +1,11 @@
+name: gdal
+channels:
+  - conda-forge
+dependencies:
+  - gdal
+  - python
+  - rasterio
+  - numpy
+  - pandas
+  - scikit-learn
+  - joblib

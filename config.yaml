@@ -3,25 +3,147 @@ output_dir: /media/lawr/blue-transcend/land-cover-comparisons/output
 region:
   file: /media/lawr/blue-transcend/land-cover-comparisons/statsnz-regional-council-2025-GPKG/regional-council-2025.gpkg
   attribute: REGC2025_V1_00_NAME
+  layer: regional_council_2025
   values:
     - Auckland
     - Manawatū-Whanganui Region
     - Canterbury Region
 
 image_sources:
-  # DyanamicWorld:
-  #   directories:
-  #     - /media/lawr/blue-transcend/land-cover-comparisons/DynamicWorld
-  #   pattern: "^.*tiff?$"
-  #   band: 1
-  # GLC-FCS30D:
-  #   directories:
-  #     - '/media/lawr/blue-transcend/land-cover-comparisons/GLC_FCS30D_19852022maps_E160-E165'
-  #     - '/media/lawr/blue-transcend/land-cover-comparisons/GLC_FCS30D_19852022maps_E170-E175'
-  #   pattern: ^GLC_FCS30D_20002022_E(165|170|175)S(30|35|40|45)_Annual\.tif$
-  #   band: 23 # Temporal sequence, 1-23 = 2000-2022
+  DyanamicWorld:
+    directories:
+      # - /media/lawr/blue-transcend/land-cover-comparisons/DynamicWorld
+      - /media/lawr/blue-transcend/land-cover-comparisons/DynamicWorld-NZ/
+    pattern: "^.*tiff?$"
+    band: 1
+    colourmap:
+      0: '#419bdf'
+      1: '#397d49'
+      2: '#88b053'
+      3: '#7a87c6'
+      4: '#e49635'
+      5: '#dfc35a'
+      6: '#c4281b'
+      7: '#a59b8f'
+      8: '#b39fe1'
+    labels:
+      0: Water
+      1: Trees
+      2: Grass
+      3: Flooded vegetation
+      4: Crops
+      5: Shrub & Scrub
+      6: Built Area
+      7: Bare Ground
+      8: Snow & Ice
+  GLC-FCS30D:
+    directories:
+      - '/media/lawr/blue-transcend/land-cover-comparisons/GLC_FCS30D_19852022maps_E160-E165'
+      - '/media/lawr/blue-transcend/land-cover-comparisons/GLC_FCS30D_19852022maps_E170-E175'
+    pattern: ^GLC_FCS30D_20002022_E(165|170|175)S(30|35|40|45)_Annual\.tif$
+    band: 23 # Temporal sequence, 1-23 = 2000-2022
+    colourmap:
+      0: '#ffffff'
+      10: '#ffff64'
+      11: '#ffff64'
+      12: '#ffff00'
+      20: '#aaf0f0'
+      51: '#4c7300'
+      52: '#006400'
+      61: '#aac800'
+      62: '#00a000'
+      71: '#005000'
+      72: '#003c00'
+      81: '#286400'
+      82: '#285000'
+      91: '#a0b432'
+      92: '#788200'
+      120: '#966400'
+      121: '#964b00'
+      122: '#966400'
+      130: '#ffb432'
+      140: '#ffdcd2'
+      150: '#ffebaf'
+      152: '#ffd278'
+      153: '#ffebaf'
+      181: '#00a884'
+      182: '#73ffdf'
+      183: '#9ebbd7'
+      184: '#828282'
+      185: '#f57ab6'
+      186: '#66cdab'
+      187: '#444f89'
+      190: '#be1400'
+      200: '#fff5d7'
+      201: '#dcdcdc'
+      202: '#fff5d7'
+      210: '#0046c8'
+      220: '#ffffff'
+    labels:
+      0: 'Filled value'
+      10: 'Rainfed cropland'
+      11: 'Herbaceous cover cropland'
+      12: 'Tree or shrub cover (Orchard) cropland'
+      20: 'Irrigated cropland'
+      51: 'Open evergreen broadleaved forest'
+      52: 'Closed evergreen broadleaved forest'
+      61: 'Open deciduous broadleaved forest (0.15 < fc < 0.4)'
+      62: 'Closed deciduous broadleaved forest (fc > 0.4)'
+      71: 'Open evergreen needle-leaved forest (0.15 < fc < 0.4)'
+      72: 'Closed evergreen needle-leaved forest (fc > 0.4)'
+      81: 'Open deciduous needle-leaved forest (0.15 < fc < 0.4)'
+      82: 'Closed deciduous needle-leaved forest (fc > 0.4)'
+      91: 'Open mixed leaf forest (broadleaved and needle-leaved)'
+      92: 'Closed mixed leaf forest (broadleaved and needle-leaved)'
+      120: 'Shrubland'
+      121: 'Evergreen shrubland'
+      122: 'Deciduous shrubland'
+      130: 'Grassland'
+      140: 'Lichens and mosses'
+      150: 'Sparse vegetation (fc < 0.15)'
+      152: 'Sparse shrubland (fc < 0.15)'
+      153: 'Sparse herbaceous (fc < 0.15)'
+      181: 'Swamp'
+      182: 'Marsh'
+      183: 'Flooded flat'
+      184: 'Saline'
+      185: 'Mangrove'
+      186: 'Salt marsh'
+      187: 'Tidal flat'
+      190: 'Impervious surfaces'
+      200: 'Bare areas'
+      201: 'Consolidated bare areas'
+      202: 'Unconsolidated bare areas'
+      210: 'Water body'
+      220: 'Permanent ice and snow'
   WorldCover:
     directories:
       - /media/lawr/blue-transcend/land-cover-comparisons/WorldCover/ESA_WorldCover_10m_2021_v200_60deg_macrotile_S90E120/
     pattern: ^ESA_WorldCover_10m_2021_V200_S(36|39|42|45|48|51|54)E(165|168|171|174|177)_Map\.tif$
     band: 1
+    colourmap:
+      0: '#000000'
+      10: '#006400'
+      20: '#ffbb22'
+      30: '#ffff4c'
+      40: '#f096ff'
+      50: '#fa0000'
+      60: '#b4b4b4'
+      70: '#f0f0f0'
+      80: '#0064c8'
+      90: '#0096a0'
+      95: '#00cf75'
+      100: '#fae6a0'
+    labels:
+      0: ''
+      10: 'Tree cover'
+      20: 'Shrubland'
+      30: 'Grassland'
+      40: 'Cropland'
+      50: 'Built-up'
+      60: 'Bare/sparse vegetation'
+      70: 'Snow and ice'
+      80: 'Permanent water bodies'
+      90: 'Herbaceous wetland'
+      95: 'Mangroves'
+      100: 'Moss and lichen'
