@@ -1,5 +1,12 @@
 output_dir: /media/lawr/blue-transcend/land-cover-comparisons/output
 
+lcdb:
+  wfs_endpoint: https://lris.scinfo.org.nz/services;key={LRIS_KEY}/wfs/
+  layer: layer-104400
+  attribute_field: Class_2018
+  nodata_value: 0
+
+
 region:
   file: /media/lawr/blue-transcend/land-cover-comparisons/statsnz-regional-council-2025-GPKG/regional-council-2025.gpkg
   attribute: REGC2025_V1_00_NAME

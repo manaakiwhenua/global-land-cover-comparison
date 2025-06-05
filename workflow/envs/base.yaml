@@ -7,3 +7,4 @@ dependencies:
   - mamba  # faster dependency resolution
   - python=3.11
   - pip
+  - python-dotenv

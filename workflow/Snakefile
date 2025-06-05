@@ -13,6 +13,8 @@ region_file_layer = config["region"]["layer"]
 regions = config["region"]["values"]
 image_sources = config["image_sources"]
 
+include: "modules/lcdb-prep.smk"
+
 # Get available sources
 sources = list(image_sources.keys())
 
