@@ -1,0 +1,10 @@
+name: sankey
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - numpy
+  - pandas
+  - plotly
+  - pip:
+    - kaleido

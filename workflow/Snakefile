@@ -28,13 +28,25 @@ def find_matching_files(source_name):
         files.extend(matches)
     return sorted(set(files))
 
+def generate_source_pairs_for_region(region):
+    """Generate file paths for source pairs without self-comparison."""
+    for i in range(len(sources)):
+        for j in range(i + 1, len(sources)):
+            if i != j:
+                yield os.path.join(output_base, "confusion", region, f"{sources[j]}--{sources[i]}.csv")
+
+def source_pair_sankey():
+    for region in regions:
+        for i in range(len(sources)):
+            for j in range(i + 1, len(sources)):
+                yield os.path.join(output_base, "sankey", region, f"{sources[j]}--{sources[i]}.png")
+
 def source_pair_confusion():
     for region in regions:
         for i in range(len(sources)):
             for j in range(i + 1, len(sources)):
-                yield os.path.join(output_base, "confusion", region, f"{sources[j]}--{sources[i]}.png")
-
-
+                if i != j:
+                    yield os.path.join(output_base, "confusion", region, f"{sources[j]}--{sources[i]}.png")
 # Rule: default
 rule all:
     input:
@@ -42,7 +54,16 @@ rule all:
             os.path.join(output_base, "aligned", "{source}", "{region}.tif"),
             source=sources, region=regions
         ),
-        list(source_pair_confusion())
+        list(source_pair_sankey()),
+        list(source_pair_confusion()),
+        expand(
+            os.path.join(output_base, "aligned", "{source}", "{region}.tif"),
+            source=sources, region=regions
+        ),
+        expand(
+            os.path.join(output_base, "jaccard", "{region}", "jaccard.csv"),
+            region=regions
+        )
 
 rule build_vrt:
     conda: "envs/gdal.yaml"
@@ -183,3 +204,35 @@ rule visualise_confusion:
         labels2=lambda wc: config['image_sources'][wc.source2]['labels'],
     script:
         'scripts/confusion-vis.py'
+
+rule visualise_confusion_sankey:
+    conda: 'envs/sankey.yaml'
+    input:
+        csv=os.path.join(output_base, "confusion", "{region}", "{source1}--{source2}.csv"),
+        script='workflow/scripts/confusion-sankey.py'
+    output:
+        png=os.path.join(output_base, "sankey", "{region}", "{source1}--{source2}.png"),
+        html=os.path.join(output_base, "sankey", "{region}", "{source1}--{source2}.html")
+    params:
+        colourmap1=lambda wc: config['image_sources'][wc.source1]['colourmap'],
+        colourmap2=lambda wc: config['image_sources'][wc.source2]['colourmap'],
+        labels1=lambda wc: config['image_sources'][wc.source1]['labels'],
+        labels2=lambda wc: config['image_sources'][wc.source2]['labels'],
+    script:
+        'scripts/confusion-sankey.py'
+
+rule visualise_confusion_jaccard:
+    conda: 'envs/jaccard.yaml'
+    input:
+        confusion_matrices=lambda wc: list(generate_source_pairs_for_region(wc.region)),  # Using list for expanded non-duplicate pairs
+        script='workflow/scripts/jaccard.py'
+        # script='workflow/scripts/jaccard-vis.py'
+    output:
+        csv=os.path.join(output_base, "jaccard", "{region}", "jaccard.csv")
+        # png=os.path.join(output_base, "jaccard", "{region}", "jaccard.png")
+    params:
+        sources_config=config['image_sources'],
+        jaccard_correspondence=config['jaccard_correspondence']
+    script:
+        'scripts/jaccard.py'
+        # 'scripts/jaccard-vis.py'

@@ -58,19 +58,19 @@ def plot_confusion_with_totals(csv_path):
         width, height = (24, 12) if len(core.columns) > len(core.index) else (12, 24)
     else:
         width, height = 12, 10
-    fig = plt.figure(figsize=(width, height)) # width, height
-    ax = sns.heatmap(core,
-                        cmap='Greys',
-                        annot=full_annot.iloc[:-1, :-1],
-                        fmt='',
-                        cbar=False,
-                        linewidths=0.5,
-                        linecolor='gray',
-                        # vmin=core.values.min(),
-                        # vmax=core.values.max()
-                        # norm=LogNorm(vmin=1, vmax=core.values.max())
-                        norm=PowerNorm(gamma=0.3, vmin=1, vmax=core.values.max())
-                    )
+    fig, ax = plt.subplots(figsize=(width, height))  # width, height
+
+    # Create the heatmap
+    sns.heatmap(core,
+                cmap='Purples',
+                alpha=0.5,
+                annot=full_annot.iloc[:-1, :-1],
+                fmt='',
+                cbar=False,
+                linewidths=0.5,
+                linecolor='gray',
+                norm=PowerNorm(gamma=0.3, vmin=1, vmax=core.values.max()),
+                ax=ax)
 
     # Set ticks and labels
     ax.set_xticks(np.arange(len(core.columns)) + 0.5)
@@ -116,54 +116,23 @@ def plot_confusion_with_totals(csv_path):
     ax.set_ylabel(source1)
     plt.title(f"Confusion Matrix: {source1} — {source2} ({region})", fontsize=12)
 
-    # # After creating the heatmap and setting labels, call the legend helper:
-    # yticks = list(map(lambda l: int(l.get_text()), ax.get_yticklabels()))
-    # xticks = list(map(lambda l: int(l.get_text()), ax.get_xticklabels()))
-    # labels1 = {k: row_labels[k] for k in yticks if k in row_labels}
-    # labels2 = {k: col_labels[k] for k in xticks if k in col_labels}
-    # create_two_column_legend(
-    #     fig,
-    #     ax,
-    #     labels1,
-    #     labels2,
-    #     row_colors,
-    #     col_colors,
-    #     left_title=source1,
-    #     right_title=source2
-    # )
-    
-    # plt.tight_layout()
+    # Draw lines on the edges of cells
+    for i in range(core.shape[0]):
+        for j in range(core.shape[1]):
+            row_prop = core.iloc[i, j] / row_totals[i]
+            col_prop = core.iloc[i, j] / col_totals[j]
+            line_length_col = col_prop  # adjust for aesthetics
+            line_length_row = row_prop  # adjust for aesthetics
+
+            # Draw vertical line for column proportion
+            ax.add_line(plt.Line2D([j + 1, j + 1], [i + 0.5 - line_length_col / 2, i + 0.5 + line_length_col / 2], color='black', linewidth=2))
+            
+            # Draw horizontal line for row proportion
+            ax.add_line(plt.Line2D([j + 0.5 - line_length_row / 2, j + 0.5 + line_length_row / 2], [i + 1, i + 1], color='black', linewidth=2))
 
     plt.savefig(snakemake.output['png'], dpi=300)
     plt.savefig(snakemake.output['svg'])
-
     # plt.show()
-
-
-def create_two_column_legend(fig, ax, row_labels, col_labels, row_colors, col_colors, left_title="Row Classes", right_title="Column Classes", left_bbox=(0.4, -0.05), right_bbox=(0.85, -0.05)):
-    """Create two separate legends side-by-side below the plot."""
-    row_handles = []
-    for key in sorted(row_colors.keys()):
-        if key in row_labels:
-            patch = mpatches.Patch(color=row_colors[key], label=f'{key}: {row_labels[key]}')
-            row_handles.append(patch)
-
-    col_handles = []
-    for key in sorted(col_colors.keys()):
-        if key in col_labels:
-            patch = mpatches.Patch(color=col_colors[key], label=f'{key}: {col_labels[key]}')
-            col_handles.append(patch)
-
-    if row_handles:
-        leg1 = fig.legend(handles=row_handles, title=left_title,
-                         loc='upper center', bbox_to_anchor=left_bbox,
-                         fancybox=False, shadow=False, frameon=True, ncol=2 if len(row_handles) > 9 else 1)
-        ax.add_artist(leg1)
-
-    if col_handles:
-        fig.legend(handles=col_handles, title=right_title,
-                  loc='upper center', bbox_to_anchor=right_bbox,
-                  fancybox=False, shadow=False, frameon=True, ncol=2 if len(col_handles) > 9 else 1)
 
 Path(snakemake.output['png']).parent.mkdir(parents=True, exist_ok=True)
 

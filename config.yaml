@@ -9,8 +9,53 @@ region:
     - Manawatū-Whanganui Region
     - Canterbury Region
 
+jaccard_correspondence:
+  - forested:
+      DynamicWorld-2024-11-01-P5M: [1]
+      GLC-FCS30D-2022: [51,52,61,62,71,72,81,82,91,92]
+      WorldCover-2021: [10]
+  - shrubland:
+      DynamicWorld-2024-11-01-P5M: [5]
+      GLC-FCS30D-2022: [120,121,122]
+      WorldCover-2021: [20]
+  - cropland:
+      DynamicWorld-2024-11-01-P5M: [4]
+      GLC-FCS30D-2022: [10,11,12,20]
+      WorldCover-2021: [40]
+  - grassland:
+      DynamicWorld-2024-11-01-P5M: [2]
+      GLC-FCS30D-2022: [130]
+      WorldCover-2021: [30]
+  - built:
+      DynamicWorld-2024-11-01-P5M: [6]
+      GLC-FCS30D-2022: [190]
+      WorldCover-2021: [50]
+  - wetlands:
+      DynamicWorld-2024-11-01-P5M: [3]
+      GLC-FCS30D-2022: [181,182,183,184]
+      WorldCover-2021: [90,95]
+  - wetlands (including tidal):
+      DynamicWorld-2024-11-01-P5M: [3]
+      GLC-FCS30D-2022: [181,182,183,184,185,186,187]
+      WorldCover-2021: [90,95]
+  - bare:
+      DynamicWorld-2024-11-01-P5M: [7]
+      GLC-FCS30D-2022: [150,152,153,200,201,202]
+      WorldCover-2021: [60]
+  - ice:
+      DynamicWorld-2024-11-01-P5M: [8]
+      GLC-FCS30D-2022: [220]
+      WorldCover-2021: [70]
+  # - tundra:
+  #     DynamicWorld-2024-11-01-P5M: []
+  #     GLC-FCS30D-2022: [140]
+  #     WorldCover-2021: [100]
+  - water:
+      DynamicWorld-2024-11-01-P5M: [0]
+      GLC-FCS30D-2022: [210]
+      WorldCover-2021: [80]
 image_sources:
-  DyanamicWorld:
+  DynamicWorld-2024-11-01-P5M:
     directories:
       # - /media/lawr/blue-transcend/land-cover-comparisons/DynamicWorld
       - /media/lawr/blue-transcend/land-cover-comparisons/DynamicWorld-NZ/
@@ -36,7 +81,7 @@ image_sources:
       6: Built Area
       7: Bare Ground
       8: Snow & Ice
-  GLC-FCS30D:
+  GLC-FCS30D-2022: &GLC-FCS30D
     directories:
       - '/media/lawr/blue-transcend/land-cover-comparisons/GLC_FCS30D_19852022maps_E160-E165'
       - '/media/lawr/blue-transcend/land-cover-comparisons/GLC_FCS30D_19852022maps_E170-E175'
@@ -116,7 +161,13 @@ image_sources:
       202: 'Unconsolidated bare areas'
       210: 'Water body'
       220: 'Permanent ice and snow'
-  WorldCover:
+  GLC-FCS30D-2021:
+    <<: *GLC-FCS30D
+    band: 22
+  GLC-FCS30D-2020:
+    <<: *GLC-FCS30D
+    band: 21
+  WorldCover-2021: &WorldCover
     directories:
       - /media/lawr/blue-transcend/land-cover-comparisons/WorldCover/ESA_WorldCover_10m_2021_v200_60deg_macrotile_S90E120/
     pattern: ^ESA_WorldCover_10m_2021_V200_S(36|39|42|45|48|51|54)E(165|168|171|174|177)_Map\.tif$
@@ -147,3 +198,8 @@ image_sources:
       90: 'Herbaceous wetland'
       95: 'Mangroves'
       100: 'Moss and lichen'
+  WorldCover-2020:
+    <<: *WorldCover
+    directories:
+      - /media/lawr/blue-transcend/land-cover-comparisons/WorldCover/ESA_WorldCover_10m_2020_v100_60deg_macrotile_S90E120/
+    pattern: ^ESA_WorldCover_10m_2020_v100_S(36|39|42|45|48|51|54)E(165|168|171|174|177)_Map\.tif$

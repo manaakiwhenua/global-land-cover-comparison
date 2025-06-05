@@ -85,7 +85,7 @@
       <td>Brown, C.F., Brumby, S.P., Guzder-Williams, B. et al. Dynamic World, Near real-time global 10 m land use land cover mapping. Sci Data 9, 251 (2022). <a href="https://doi.org/10.1038/s41597-022-01307-4">doi.org/10.1038/s41597-022-01307-4</a></td>
       <td><a href="https://dynamicworld.app/download">Dynamic World</a></td>
       <td>GOOGLE/DYNAMICWORLD/V1</td>
-      <td></td>
+      <td>This dataset is produced for the Dynamic World Project by Google in partnership with National Geographic Society and the World Resources Institute.</td>
     </tr>
     <tr>
       <td><b>Global Land Cover Change Dataset (GLC FCS30D)</b></td>
