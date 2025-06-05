@@ -114,10 +114,41 @@
   </tbody>
 </table>
 
+<<<<<<< Updated upstream
 
 <!-- - World Cover Map
     - InputQuality: Three-band GeoTIFF providing three per-pixel quality indicators of the Sentinel-1 and Sentinel-2 input data
     - "Since the WorldCover maps for 2020 and 2021 were generated with different algorithm versions (v100 and v200, respectively), changes between the maps should be treated with caution, as they include both changes in real land cover and changes due to the used algorithms."
+=======
+- World Cover Map
+    - Downloading
+        - NB as it uses session tokens, must be downloaded interactively. Downloads a ZIP archive that must be extracted. NZ images are those that match the following regular expression: `ESA_WorldCover_10m_(?:2020|2021)_V(?:100|200)_60deg_macrotile_S90E120/ESA_WorldCover_10m_(?:2020|2021)_V(?:100|200)_S\d{2}E(?:165|168|171|174|177)_Map.tif`
+    - Format: 3x3 degree tiles as Cloud Optimized GeoTIFFs (COGs)
+    - Projection: EPSG:4326
+    - Accuracy: 75% overall accuracy (2020)
+    - Classes:
+        1. Tree cover
+        2. Shrubland
+        3. Grassland
+        4. Cropland
+        5. Built-up
+        6. Bare / sparse vegetation
+        7. Snow and Ice
+        8. Permanent water bodies
+        9. Herbaceous Wetland
+        10. Mangrove
+        11. Moss and lichen
+    - Download link:
+        - 2020: https://worldcover2020.esa.int/download
+        - 2021: https://worldcover2021.esa.int/downloader
+    - Data layers:
+        - Map: land cover map with 11 classes
+        - InputQuality: Three-band GeoTIFF providing three per-pixel quality indicators of the Sentinel-1 and Sentinel-2 input data
+    - Attribution: © ESA WorldCover project / Contains modified Copernicus Sentinel data (2021) processed by ESA WorldCover consortium
+    - Citation: Zanaga, D., Van De Kerchove, R., Daems, D., De Keersmaecker, W., Brockmann, C., Kirches, G., Wevers, J., Cartus, O., Santoro, M., Fritz, S., Lesiv, M., Herold, M., Tsendbazar, N.E., Xu, P., Ramoino, F., Arino, O., 2022. ESA WorldCover 10 m 2021 v200. https://doi.org/10.5281/zenodo.7254221
+    - Notes:
+        - "Since the WorldCover maps for 2020 and 2021 were generated with different algorithm versions (v100 and v200, respectively), changes between the maps should be treated with caution, as they include both changes in real land cover and changes due to the used algorithms."
+>>>>>>> Stashed changes
 
 - Dynamic World:
     - Not an officially supported Google Product
