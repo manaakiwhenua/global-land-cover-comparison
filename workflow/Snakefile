@@ -69,6 +69,8 @@ rule all:
 
 rule build_vrt:
     conda: "envs/gdal.yaml"
+    input:
+        lcdb=os.path.join(output_base, "lcdb", "lcdb_raster.tif") # Must be built first, others are manually downloaded
     output:
         vrt=os.path.join(output_base, "vrt", "{source}.vrt")
     run:

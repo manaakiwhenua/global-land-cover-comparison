@@ -1,2 +1,2 @@
 #/bin/bash
-snakemake --use-conda --cores 4 all
+snakemake --configfile config.yaml --configfile config.local.yaml --use-conda --cores 4 all

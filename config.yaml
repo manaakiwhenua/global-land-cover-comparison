@@ -21,47 +21,137 @@ jaccard_correspondence:
       DynamicWorld-2024-11-01-P5M: [1]
       GLC-FCS30D-2022: [51,52,61,62,71,72,81,82,91,92]
       WorldCover-2021: [10]
+      LCDB_v5: [54,68,69,71]
   - shrubland:
       DynamicWorld-2024-11-01-P5M: [5]
       GLC-FCS30D-2022: [120,121,122]
       WorldCover-2021: [20]
+      LCDB_v5: [50,51,52,55,56,58,80,81]
   - cropland:
       DynamicWorld-2024-11-01-P5M: [4]
       GLC-FCS30D-2022: [10,11,12,20]
       WorldCover-2021: [40]
+      LCDB_v5: [30]
   - grassland:
       DynamicWorld-2024-11-01-P5M: [2]
       GLC-FCS30D-2022: [130]
       WorldCover-2021: [30]
+      LCDB_v5: [15,40,41,43,44]
   - built:
       DynamicWorld-2024-11-01-P5M: [6]
       GLC-FCS30D-2022: [190]
       WorldCover-2021: [50]
+      LCDB_v5: [1,2,5]
   - wetlands:
       DynamicWorld-2024-11-01-P5M: [3]
       GLC-FCS30D-2022: [181,182,183,184]
       WorldCover-2021: [90,95]
+      LCDB_v5: [45,46,47,70]
   - wetlands (including tidal):
       DynamicWorld-2024-11-01-P5M: [3]
       GLC-FCS30D-2022: [181,182,183,184,185,186,187]
       WorldCover-2021: [90,95]
+      LCDB_v5: [22,45,46,47,70]
   - bare:
       DynamicWorld-2024-11-01-P5M: [7]
       GLC-FCS30D-2022: [150,152,153,200,201,202]
       WorldCover-2021: [60]
+      LCDB_v5: [6,10,12,16,64]
   - ice:
       DynamicWorld-2024-11-01-P5M: [8]
       GLC-FCS30D-2022: [220]
       WorldCover-2021: [70]
+      LCDB_v5: [14]
   # - tundra:
   #     DynamicWorld-2024-11-01-P5M: []
   #     GLC-FCS30D-2022: [140]
   #     WorldCover-2021: [100]
+  #     LCDB_v5: [15]
   - water:
       DynamicWorld-2024-11-01-P5M: [0]
       GLC-FCS30D-2022: [210]
       WorldCover-2021: [80]
+      LCDB_v5: [0,20,21,22]
 image_sources:
+  LCDB_v5:
+    directories:
+      - /media/lawr/blue-transcend/land-cover-comparisons/output/lcdb/ # Will be made within the process if doesn't exist
+    pattern: lcdb_raster.tif
+    band: 1
+    colourmap:
+      0: '#000000'
+      1: '#9c9c9c'
+      6: '#704489'
+      5: '#a80000'
+      2: '#688578'
+      10: '#ffff73'
+      12: '#ca7af5'
+      15: '#abd566'
+      16: '#9cba9c'
+      14: '#dbd4ff'
+      20: '#bee8ff'
+      21: '#bee8ff'
+      22: '#d6f5e8'
+      30: '#ffd37f'
+      33: '#e69800'
+      40: '#beff8c'
+      41: '#a3d400'
+      43: '#e6e68c'
+      44: '#d2d25a'
+      45: '#c2ffd6'
+      46: '#def5de'
+      47: '#7af5ca'
+      50: '#705c00'
+      51: '#7d690f'
+      52: '#8c7922'
+      54: '#a8994f'
+      55: '#b8ab6a'
+      56: '#c4bb89'
+      58: '#d4cdae'
+      80: '#bfd5ae'
+      81: '#d4c27a'
+      64: '#a1ad61'
+      68: '#477f00'
+      69: '#284600'
+      71: '#38a800'
+      70: '#448989'
+    labels:
+      0: Not land
+      1: Built-up Area (settlement)
+      2: Urban Parkland/Open Space
+      5: Transport Infrastructure
+      6: Surface Mine or Dump
+      10: Sand or Gravel
+      12: Landslide
+      14: Permanent Snow and Ice
+      16: Gravel or Rock
+      15: Alpine Grass/Herbfield
+      20: Lake or Pond
+      21: River
+      22: Estuarine Open Water
+      30: Short-rotation Cropland
+      33: Orchards, Vineyards or Other Perennial Crops
+      40: High Producing Exotic Grassland
+      41: Low Producing Grassland
+      43: Tall Tussock Grassland
+      44: Depleted Grassland
+      45: Herbaceous Freshwater Vegetation
+      46: Herbaceous Saline Vegetation
+      47: Flaxland
+      50: Fernland
+      51: Gorse and/or Broom
+      52: Manuka and/or Kanuka
+      54: Broadleaved Indigenous Hardwoods
+      55: Sub Alpine Shrubland
+      56: Mixed Exotic Shrubland
+      58: Matagouri or Grey Scrub
+      80: Peat Shrubland (Chatham Is)
+      81: Dune Shrubland (Chatham Is)
+      70: Mangrove
+      64: Forest - Harvested
+      68: Deciduous Hardwoods
+      69: Indigenous Forest
+      71: Exotic Forest
   DynamicWorld-2024-11-01-P5M:
     directories:
       # - /media/lawr/blue-transcend/land-cover-comparisons/DynamicWorld
