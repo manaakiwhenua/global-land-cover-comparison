@@ -57,6 +57,8 @@ def main():
             # Safely filter valid IDs only
             values1 = [v for v in values1 if v in confusion_matrix.index]
             values2 = [v for v in values2 if v in confusion_matrix.columns]
+            area1 = confusion_matrix.loc[values1].sum().sum()
+            area2 = confusion_matrix.loc[:, values2].sum().sum()
 
             if not values1 or not values2:
                 print(f"{concept} - Missing classes in confusion matrix.", file=sys.stderr)
@@ -64,16 +66,20 @@ def main():
 
             try:
                 intersection_count = confusion_matrix.loc[values1, values2].sum().sum()
-                union_count = (confusion_matrix.loc[values1].sum().sum() +
-                               confusion_matrix.loc[:, values2].sum().sum() -
-                               intersection_count)
+                union_count = (area1 + area2 - intersection_count)
 
                 jaccard_index = compute_jaccard_index(intersection_count, union_count)
                 jaccard_records.append({
                     "Concept": concept,
                     "Source1": src1,
                     "Source2": src2,
-                    "Jaccard Index": jaccard_index
+                    "Jaccard Index": jaccard_index,
+                    "Area1_ha": area1 / 100,
+                    "Area2_ha": area2 / 100,
+                    "Area1_kha": area1 / 100000,
+                    "Area2_kha": area2 / 100000,
+                    "intersection_count": intersection_count,
+                    "union_count": union_count
                 })
             except KeyError as ke:
                 print(f"Key Error for {concept}: {ke}", file=sys.stderr)
