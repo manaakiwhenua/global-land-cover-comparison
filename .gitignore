@@ -1,3 +1,4 @@
 .snakemake
 notes.md
 secrets.env
+config.local.yaml
