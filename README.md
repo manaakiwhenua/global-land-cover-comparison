@@ -42,4 +42,4 @@ For convenience, there are also QGIS QML style files included in this repo for v
 
 ## Contact
 
-- (mailto:lawr@landcareresearch.co.nz)[Richard Law]
+- [mailto:lawr@landcareresearch.co.nz](Richard Law)
