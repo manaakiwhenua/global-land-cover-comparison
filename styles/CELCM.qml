@@ -1,18 +1,18 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis minScale="1e+08" version="3.40.3-Bratislava" autoRefreshTime="0" styleCategories="AllStyleCategories" autoRefreshMode="Disabled" hasScaleBasedVisibilityFlag="0" maxScale="0">
+<qgis maxScale="0" styleCategories="AllStyleCategories" minScale="1e+08" autoRefreshTime="0" hasScaleBasedVisibilityFlag="0" autoRefreshMode="Disabled" version="3.40.3-Bratislava">
   <flags>
     <Identifiable>1</Identifiable>
     <Removable>1</Removable>
     <Searchable>0</Searchable>
     <Private>0</Private>
   </flags>
-  <temporal fetchMode="0" enabled="0" bandNumber="1" mode="0">
+  <temporal mode="0" bandNumber="1" fetchMode="0" enabled="0">
     <fixedRange>
       <start></start>
       <end></end>
     </fixedRange>
   </temporal>
-  <elevation symbology="Line" band="1" enabled="0" zscale="1" zoffset="0" mode="RepresentsElevationSurface">
+  <elevation symbology="Line" band="1" zoffset="0" mode="RepresentsElevationSurface" zscale="1" enabled="0">
     <data-defined-properties>
       <Option type="Map">
         <Option type="QString" name="name" value=""/>
@@ -21,7 +21,7 @@
       </Option>
     </data-defined-properties>
     <profileLineSymbol>
-      <symbol is_animated="0" force_rhr="0" type="line" frame_rate="10" alpha="1" name="" clip_to_extent="1">
+      <symbol clip_to_extent="1" type="line" is_animated="0" name="" alpha="1" force_rhr="0" frame_rate="10">
         <data_defined_properties>
           <Option type="Map">
             <Option type="QString" name="name" value=""/>
@@ -29,7 +29,7 @@
             <Option type="QString" name="type" value="collection"/>
           </Option>
         </data_defined_properties>
-        <layer id="{13368d3a-ba62-4064-b942-ea4846e2c6fb}" enabled="1" locked="0" pass="0" class="SimpleLine">
+        <layer class="SimpleLine" pass="0" locked="0" id="{13368d3a-ba62-4064-b942-ea4846e2c6fb}" enabled="1">
           <Option type="Map">
             <Option type="QString" name="align_dash_pattern" value="0"/>
             <Option type="QString" name="capstyle" value="square"/>
@@ -70,7 +70,7 @@
       </symbol>
     </profileLineSymbol>
     <profileFillSymbol>
-      <symbol is_animated="0" force_rhr="0" type="fill" frame_rate="10" alpha="1" name="" clip_to_extent="1">
+      <symbol clip_to_extent="1" type="fill" is_animated="0" name="" alpha="1" force_rhr="0" frame_rate="10">
         <data_defined_properties>
           <Option type="Map">
             <Option type="QString" name="name" value=""/>
@@ -78,7 +78,7 @@
             <Option type="QString" name="type" value="collection"/>
           </Option>
         </data_defined_properties>
-        <layer id="{5726a5fd-46e2-4284-91a0-5f5c9637afcf}" enabled="1" locked="0" pass="0" class="SimpleFill">
+        <layer class="SimpleFill" pass="0" locked="0" id="{5726a5fd-46e2-4284-91a0-5f5c9637afcf}" enabled="1">
           <Option type="Map">
             <Option type="QString" name="border_width_map_unit_scale" value="3x:0,0,0,0,0,0"/>
             <Option type="QString" name="color" value="225,89,137,255,rgb:0.88235294117647056,0.34901960784313724,0.53725490196078429,1"/>
@@ -121,9 +121,9 @@
   </pipe-data-defined-properties>
   <pipe>
     <provider>
-      <resampling enabled="false" zoomedOutResamplingMethod="nearestNeighbour" zoomedInResamplingMethod="nearestNeighbour" maxOversampling="2"/>
+      <resampling zoomedInResamplingMethod="nearestNeighbour" enabled="false" zoomedOutResamplingMethod="nearestNeighbour" maxOversampling="2"/>
     </provider>
-    <rasterrenderer alphaBand="-1" band="1" nodataColor="0,0,0,255,hsv:0,0,0,1" type="paletted" opacity="1">
+    <rasterrenderer type="paletted" nodataColor="0,0,0,255,hsv:0,0,0,1" opacity="1" band="1" alphaBand="-1">
       <rasterTransparency/>
       <minMaxOrigin>
         <limits>None</limits>
@@ -134,28 +134,29 @@
         <stdDevFactor>2</stdDevFactor>
       </minMaxOrigin>
       <colorPalette>
-        <paletteEntry label="Water" alpha="255" color="#359ec9" value="1"/>
-        <paletteEntry label="Bare Ground" alpha="255" color="#d3d3d3" value="2"/>
-        <paletteEntry label="Woody Vegetation" alpha="255" color="#006400" value="3"/>
-        <paletteEntry label="Herbaceous Vegetation" alpha="255" color="#f6f99e" value="4"/>
-        <paletteEntry label="Primarily Bare Ground" alpha="255" color="#d1b38c" value="6"/>
-        <paletteEntry label="Snow" alpha="255" color="#ff00ff" value="7"/>
-        <paletteEntry label="Glacial Lakes, Wet Rock, Water/Sediment" alpha="255" color="#5ab2ff" value="8"/>
-        <paletteEntry label="Unspecified Woody Vegetation" alpha="255" color="#639063" value="9"/>
-        <paletteEntry label="Narrow-leaved scrub" alpha="255" color="#999869" value="10"/>
-        <paletteEntry label="Exotic Forest" alpha="255" color="#00a400" value="11"/>
-        <paletteEntry label="Deciduous Hardwoods" alpha="255" color="#70610a" value="12"/>
-        <paletteEntry label="Broadleaved Shrub" alpha="255" color="#819869" value="13"/>
-        <paletteEntry label="Croplands" alpha="255" color="#f6f96e" value="14"/>
-        <paletteEntry label="Wetlands" alpha="255" color="#359e8c" value="15"/>
-        <paletteEntry label="Orchards and Vineyards" alpha="255" color="#f6c2cf" value="16"/>
+        <paletteEntry alpha="255" color="#359ec9" label="Water" value="1"/>
+        <paletteEntry alpha="255" color="#d3d3d3" label="Bare Ground" value="2"/>
+        <paletteEntry alpha="255" color="#006400" label="Indigenous Vegetation" value="3"/>
+        <paletteEntry alpha="255" color="#f6f99e" label="Herbaceous Vegetation" value="4"/>
+        <paletteEntry alpha="255" color="#ffffff" label="Cloud" value="5"/>
+        <paletteEntry alpha="255" color="#d1b28c" label="Primarily Bare Ground" value="6"/>
+        <paletteEntry alpha="255" color="#ff00ff" label="Snow" value="7"/>
+        <paletteEntry alpha="255" color="#5ab2ff" label="Glacial Lakes, Wet Rock, Water/Sediment" value="8"/>
+        <paletteEntry alpha="255" color="#666666" label="Unspecified Woody Vegetation" value="9"/>
+        <paletteEntry alpha="255" color="#709c63" label="Narrow-leaved scrub" value="10"/>
+        <paletteEntry alpha="255" color="#ab291f" label="Exotic Forest" value="11"/>
+        <paletteEntry alpha="255" color="#ffa600" label="Deciduous Hardwoods" value="12"/>
+        <paletteEntry alpha="255" color="#ff80a1" label="Broadleaved Shrub" value="13"/>
+        <paletteEntry alpha="255" color="#824ab3" label="Croplands" value="14"/>
+        <paletteEntry alpha="255" color="#91d491" label="Wetlands" value="15"/>
+        <paletteEntry alpha="255" color="#f6c2cf" label="Orchards and Vineyards" value="16"/>
       </colorPalette>
       <colorramp type="randomcolors" name="[source]">
         <Option/>
       </colorramp>
     </rasterrenderer>
-    <brightnesscontrast gamma="1" brightness="0" contrast="0"/>
-    <huesaturation colorizeRed="255" invertColors="0" saturation="0" colorizeOn="0" colorizeGreen="128" colorizeBlue="128" grayscaleMode="0" colorizeStrength="100"/>
+    <brightnesscontrast brightness="0" gamma="1" contrast="0"/>
+    <huesaturation colorizeBlue="128" grayscaleMode="0" invertColors="0" colorizeGreen="128" colorizeOn="0" colorizeStrength="100" saturation="0" colorizeRed="255"/>
     <rasterresampler maxOversampling="2"/>
     <resamplingStage>resamplingFilter</resamplingStage>
   </pipe>

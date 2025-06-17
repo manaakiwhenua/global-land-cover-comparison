@@ -24,6 +24,7 @@ jaccard_correspondence:
       LCDB_v5: [54,68,69,71]
       Woody: [3] # Shrub and forest combined
       CELCM_2324: [3,9,11,12]
+      JRC_GFC2020_V2: [1]
   - shrubland:
       DynamicWorld-2024-11-01-P5M: [5]
       GLC-FCS30D-2022: [120,121,122]
@@ -31,6 +32,7 @@ jaccard_correspondence:
       LCDB_v5: [50,51,52,55,56,58,80,81]
       Woody: []
       CELCM_2324: [10,13]
+      JRC_GFC2020_V2: []
   - cropland:
       DynamicWorld-2024-11-01-P5M: [4]
       GLC-FCS30D-2022: [10,11,12,20]
@@ -38,6 +40,7 @@ jaccard_correspondence:
       LCDB_v5: [30]
       Woody: []
       CELCM_2324: [14]
+      JRC_GFC2020_V2: []
   - grassland:
       DynamicWorld-2024-11-01-P5M: [2]
       GLC-FCS30D-2022: [130]
@@ -45,6 +48,7 @@ jaccard_correspondence:
       LCDB_v5: [15,40,41,43,44]
       Woody: []
       CELCM_2324: [4]
+      JRC_GFC2020_V2: []
   - built:
       DynamicWorld-2024-11-01-P5M: [6]
       GLC-FCS30D-2022: [190]
@@ -52,6 +56,7 @@ jaccard_correspondence:
       LCDB_v5: [1,2,5]
       Woody: []
       CELCM_2324: []
+      JRC_GFC2020_V2: []
   - wetlands:
       DynamicWorld-2024-11-01-P5M: [3]
       GLC-FCS30D-2022: [181,182,183,184]
@@ -59,6 +64,7 @@ jaccard_correspondence:
       LCDB_v5: [45,46,47,70]
       Woody: []
       CELCM_2324: [15]
+      JRC_GFC2020_V2: []
   - wetlands (including tidal):
       DynamicWorld-2024-11-01-P5M: [3]
       GLC-FCS30D-2022: [181,182,183,184,185,186,187]
@@ -66,6 +72,7 @@ jaccard_correspondence:
       LCDB_v5: [22,45,46,47,70]
       Woody: []
       CELCM_2324: [15]
+      JRC_GFC2020_V2: []
   - bare:
       DynamicWorld-2024-11-01-P5M: [7]
       GLC-FCS30D-2022: [150,152,153,200,201,202]
@@ -73,6 +80,7 @@ jaccard_correspondence:
       LCDB_v5: [6,10,12,16,64]
       Woody: [2]
       CELCM_2324: [2,6]
+      JRC_GFC2020_V2: []
   - ice:
       DynamicWorld-2024-11-01-P5M: [8]
       GLC-FCS30D-2022: [220]
@@ -80,6 +88,7 @@ jaccard_correspondence:
       LCDB_v5: [14]
       Woody: [7]
       CELCM_2324: [7]
+      JRC_GFC2020_V2: []
   # - tundra:
   #     DynamicWorld-2024-11-01-P5M: []
   #     GLC-FCS30D-2022: [140]
@@ -92,6 +101,7 @@ jaccard_correspondence:
       LCDB_v5: [0,20,21,22]
       Woody: [1,8]
       CELCM_2324: [1,8]
+      JRC_GFC2020_V2: []
 image_sources:
   LCDB_v5:
     directories:
@@ -199,7 +209,7 @@ image_sources:
       8: 'Glacial Lakes, Wet Rock, Water/Sediment'
   CELCM_2324: # Cost-effective land cover map
     directories:
-      - /media/lawr/blue-transcend/land-cover-comparisons/CELCM/
+      - /media/lawr/blue-transcend/land-cover-comparisons/CELCM/nz_2324_blc/
     pattern: nz_2324_blc_2193\.tif # 2023-24
     band: 1
     colourmap:
@@ -209,16 +219,16 @@ image_sources:
       3: '#006400'
       4: '#f6f99e'
       5: '#ffffff' 
-      6: '#d1b38c'
+      6: '#d1b28c'
       7: '#ff00ff'
       8: '#5ab2ff'
-      9: '#639063'
-      10: '#999869'
-      11: '#00a400'
-      12: '#70610a'
-      13: '#819869'
-      14: '#f6f96e'
-      15: '#359e8c'
+      9: '#666666'
+      10: '#709c63'
+      11: '#ab291f'
+      12: '#ffa600'
+      13: '#ff80a1'
+      14: '#824ab3'
+      15: '#91d491'
       16: '#f6c2cf'
     labels:
       0: 'Undefined'
@@ -238,6 +248,17 @@ image_sources:
       14: 'Cropland' # Temporal NDVI 2020-2024
       15: 'Wetlands' #LCDB
       16: 'Orchards and Vineyards' # LCDB
+  JRC_GFC2020_V2: # https://forobs.jrc.ec.europa.eu/GFC
+    directories:
+      - /media/lawr/blue-transcend/land-cover-comparisons/ESA_Forest/
+    pattern: JRC_GFC2020_V2_(N|S)\d+_(E|W)\d+\.tif
+    band: 1
+    colourmap:
+      0: '#000000'
+      1: '#006400'
+    labels:
+      0: 'Non-forest'
+      1: 'Forest'
   DynamicWorld-2024-11-01-P5M:
     directories:
       # - /media/lawr/blue-transcend/land-cover-comparisons/DynamicWorld
